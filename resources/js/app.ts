@@ -5,6 +5,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
+import GoogleSignInButton from 'vue3-google-signin';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -14,6 +15,9 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(GoogleSignInButton, {
+                clientId: '77431662884-43n6oacikogkt26rslhokgkrbqs76q70.apps.googleusercontent.com',
+            })
             .mount(el);
     },
     progress: {

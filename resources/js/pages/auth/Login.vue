@@ -11,11 +11,26 @@ import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import {
+    GoogleSignInButton,
+    type CredentialResponse,
+} from "vue3-google-signin";
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
 }>();
+
+// handle success event
+const handleLoginSuccess = (response: CredentialResponse) => {
+    const { credential } = response;
+    console.log("Access Token", credential);
+};
+
+// handle an error event
+const handleLoginError = () => {
+    console.error("Login failed");
+};
 </script>
 
 <template>
@@ -82,6 +97,37 @@ defineProps<{
                 Don't have an account?
                 <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
             </div>
+
+            <h4 class="login-between"> Or </h4>
+
+            <GoogleSignInButton
+                @success="handleLoginSuccess"
+                @error="handleLoginError"
+                class="google-sign"
+            ></GoogleSignInButton>
         </Form>
     </AuthBase>
 </template>
+
+<style>
+    .login-between {
+        display: flex;
+        flex-direction: row;
+    }
+    .login-between:before,
+    .login-between:after {
+        content: '';
+        flex: 1 1;
+        border-bottom: 1px solid;
+        margin: auto;
+    }
+    .login-between:before {
+        margin-right: 10px;
+    }
+    .login-between:after {
+        margin-left: 10px;
+    }
+    .google-sign > div {
+        width: 100% !important;
+    }
+</style>
