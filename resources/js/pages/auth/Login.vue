@@ -24,7 +24,11 @@ defineProps<{
 // handle success event
 const handleLoginSuccess = (response: CredentialResponse) => {
     const { credential } = response;
-    console.log("Access Token", credential);
+    const form = new FormData()
+    form.append('access_token', credential ?? '');
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/oauth/gmail');
+    xhr.send(form);
 };
 
 // handle an error event
