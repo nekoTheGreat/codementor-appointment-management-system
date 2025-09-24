@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class GmailOAuthController extends Controller
 {
@@ -19,7 +20,12 @@ class GmailOAuthController extends Controller
             throw new BadRequestHttpException("Access token required");
         }
 
-        $client = new \Google_Client(['client_id' => '77431662884-43n6oacikogkt26rslhokgkrbqs76q70.apps.googleusercontent.com']);
+        // verify token and retrieve user info
+        $client = new \Google_Client(['client_id' => config('auth.google.client_id')]);
+        $result = $client->verifyIdToken($accessToken);
+        if (empty($result)) {
+            throw new UnauthorizedHttpException("Failed to retrieve client data");
+        }
 
         $result = $client->verifyIdToken($payload['access_token']);
         $response = new Response();
