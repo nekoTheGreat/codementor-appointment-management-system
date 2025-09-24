@@ -14,7 +14,8 @@ class GmailOAuthController extends Controller
     {
         $payload = $request->getPayload();
 
-        if (empty($payload['access_token'])) {
+        $accessToken = $payload->get('access_token');
+        if (empty($accessToken)) {
             throw new BadRequestHttpException("Access token required");
         }
 
