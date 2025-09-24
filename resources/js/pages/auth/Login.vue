@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/vue3';
+import {Form, Head, useForm} from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import {
     GoogleSignInButton,
@@ -22,13 +22,13 @@ defineProps<{
 }>();
 
 // handle success event
+const authForm = useForm({
+    access_token: ''
+});
 const handleLoginSuccess = (response: CredentialResponse) => {
     const { credential } = response;
-    const form = new FormData()
-    form.append('access_token', credential ?? '');
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/oauth/gmail');
-    xhr.send(form);
+    authForm.access_token = credential ?? '';
+    authForm.post('/oauth/gmail');
 };
 
 // handle an error event
